@@ -3,7 +3,7 @@ package level01.task2028;
 import java.io.Serializable;
 import java.util.*;
 
-public class CustomTree extends AbstractList<String> implements Cloneable, Serializable {
+public class CustomTree extends AbstractList<String> implements Serializable {
 	
 	Entry<String> root;
 	int size;
@@ -33,13 +33,33 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
 		
 	}
 	
+	private boolean removeRecursive(Entry<String> e) {
+		this.size--;
+		//System.out.println("Name: " + e.elementName + " > size:" + size);
+		boolean hasLeftChild = !e.availableToAddLeftChildren;
+		boolean hasRightChild = !e.availableToAddRightChildren;
+		while (hasLeftChild || hasRightChild) {
+			if (hasLeftChild) {
+				hasLeftChild = removeRecursive(e.leftChild);
+			} if (hasRightChild) {
+				hasRightChild = removeRecursive(e.rightChild);
+			}
+		}
+		return false;
+	}
+	
+	private Queue<Entry<String>> initQueue(){
+		Queue<Entry<String>> queue = new LinkedList<>();
+		queue.add(root);
+		return queue;
+	}
+	
 	@Override
 	public boolean add(String s) {
 		if (s == null) {
 			return false;
 		}
-		Queue<Entry<String>> queue = new LinkedList<>();
-		queue.add(root);
+		Queue<Entry<String>> queue = initQueue();
 		Entry<String> e;
 		while (true) {
 			e = queue.poll();
@@ -75,17 +95,13 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
 		if (s == null) {
 			return null;
 		}
-		Queue<Entry<String>> queue = new LinkedList<>();
-		queue.add(root);
+		Queue<Entry<String>> queue = initQueue();
 		Entry<String> e;
 		while (true) {
 			e = queue.poll();
 			if (e == null) {
 				return null;
 			}
-//			if (e.elementName != null && e.elementName.equals(s)) {
-//				return e.parent.elementName;
-//			}
 			 if (e.leftChild != null && e.leftChild.elementName.equals(s)) {
 				return e.elementName;
 			}
@@ -103,28 +119,12 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
 		}
 	}
 	
-	private boolean removeRecursive(Entry<String> e) {
-		this.size--;
-		//System.out.println("Name: " + e.elementName + " > size:" + size);
-		boolean hasLeftChild = !e.availableToAddLeftChildren;
-		boolean hasRightChild = !e.availableToAddRightChildren;
-		while (hasLeftChild || hasRightChild) {
-			if (hasLeftChild) {
-				hasLeftChild = removeRecursive(e.leftChild);
-			} if (hasRightChild) {
-				hasRightChild = removeRecursive(e.rightChild);
-			}
-		}
-		return false;
-	}
-	
 	@Override
 	public boolean remove(Object o) {
 		if (!(o instanceof String)) {
 			throw new UnsupportedOperationException();
 		}
-		Queue<Entry<String>> queue = new LinkedList<>();
-		queue.add(root);
+		Queue<Entry<String>> queue = initQueue();
 		Entry<String> e;
 		while (true) {
 			e = queue.poll();
