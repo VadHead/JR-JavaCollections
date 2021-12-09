@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-public class task3112 {
+public class task31125 {
 	public static void main(String[] args) throws IOException {
 		Path passwords = downloadFile("https://javarush.ru/testdata/secretPasswords.txt", Paths.get("C:\\Users\\vadim.alekseyev\\IdeaProjects\\JR-JavaCollections\\JavaCollections\\test_dir_1"));
 		
